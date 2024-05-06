@@ -2,13 +2,13 @@ import { useState } from 'react'
 import "@/reset.css"
 import './App.css'
 import Header from './components/Header/Header'
-import HomeContent from './components/HomeContent/HomeContent'
+import HomePage from './pages/HomePage'
 
 function App() {
   return (
     <>
       <Header />
-      <HomeContent />
+      <HomePage />
     </>
   )
 }
