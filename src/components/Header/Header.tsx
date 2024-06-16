@@ -8,15 +8,16 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import LoginDialog from "../LoginDialog";
 import SignupDialog from "../SignupDialog";
+import UserTokenContext from "@/contexts/authContext";
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [auth, setAuth] = useState(null);
+    const { userToken, setUserToken } = useContext(UserTokenContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const [openRegisterDialog, setOpenRegisterDialog] = useState(false);
     const pages = ["filmes", "séries"];
@@ -38,7 +39,7 @@ export default function Header() {
     }
 
     function handleLogout() {
-        setAuth(null);
+        setUserToken("");
         handleClose();
     }
 
@@ -104,7 +105,7 @@ export default function Header() {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        {auth === null
+                        {userToken.length === 0
                             ? [
                                   <MenuItem
                                       onClick={handleOpenLoginDialog}
@@ -134,7 +135,7 @@ export default function Header() {
                     <LoginDialog
                         openDialog={openLoginDialog}
                         setOpenDialog={setOpenLoginDialog}
-                        setAuth={setAuth}
+                        setAuth={setUserToken}
                     />
                     <SignupDialog
                         openDialog={openRegisterDialog}

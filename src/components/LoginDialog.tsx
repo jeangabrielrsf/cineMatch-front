@@ -1,3 +1,4 @@
+import UserTokenContext from "@/contexts/authContext";
 import { login } from "@/services/auth";
 import { UserLoginData } from "@/utils/formUtils";
 import {
@@ -11,7 +12,7 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 
 export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
         try {
             const response = await login(data);
             console.log(response);
-            setAuth(response.data.access_token);
+            setAuth(response.access_token);
         } catch (error) {
             console.error(error);
         }
