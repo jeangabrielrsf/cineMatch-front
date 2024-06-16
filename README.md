@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# CineMatch - Front
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto representa o front-end do CineMatch, uma aplicação de recomendação de filmes e séries.
 
-Currently, two official plugins are available:
+## Pré-Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+É necessário ter instalado em sua máquina:
 
-## Expanding the ESLint configuration
+-   Node (>=18)
+-   npm
+-   APIKey do TMDB, API gratuita para pegar informações de filmes e séries
+
+## Como rodar esse projeto localmente
 
 If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone este repositório ou baixe em seu computador
+2. Crie um arquivo .env . Um arquivo env_example foi disponibilizado para o usuário colocar seus próprios dados
+3. Instalar as dependencias do projeto
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+4. Rodar o projeto
+
+```bash
+npm run dev
+```
