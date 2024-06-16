@@ -14,11 +14,13 @@ import {
     ListItemIcon,
     Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { useState } from "react";
 import styled from "styled-components";
 
 export default function SerieContent(props: Readonly<{ serie: any }>) {
     const [openInfo, setOpenInfo] = useState(false);
+    const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
         setOpenInfo(true);
@@ -69,14 +71,14 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
                                 <ListItemIcon>
                                     <CalendarMonth />
                                 </ListItemIcon>
-                                Data de lançamento: {props.serie.first_air_date}
+                                Data de lançamento: {releaseDate}
                             </ListItem>
                             <Divider />
                             <ListItem>
                                 <ListItemIcon>
                                     <StarRate />
                                 </ListItemIcon>
-                                {props.serie.vote_average}
+                                Nota média: {props.serie.vote_average}
                             </ListItem>
                         </List>
                     </CardContent>

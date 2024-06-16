@@ -1,4 +1,4 @@
-import { CalendarMonth, StarRate, ThumbUp } from "@mui/icons-material";
+import { CalendarMonth, StarRate } from "@mui/icons-material";
 import {
     Box,
     Button,
@@ -9,17 +9,18 @@ import {
     Dialog,
     DialogTitle,
     Divider,
-    IconButton,
     List,
     ListItem,
     ListItemIcon,
     Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
 import { useState } from "react";
 import styled from "styled-components";
 
 export default function MovieContent(props: Readonly<{ movie: any }>) {
     const [openInfo, setOpenInfo] = useState(false);
+    const releaseDate = dayjs(props.movie.release_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
         setOpenInfo(true);
@@ -70,14 +71,14 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
                                 <ListItemIcon>
                                     <CalendarMonth />
                                 </ListItemIcon>
-                                Data de lançamento: {props.movie.release_date}
+                                Data de lançamento: {releaseDate}
                             </ListItem>
                             <Divider />
                             <ListItem>
                                 <ListItemIcon>
                                     <StarRate />
                                 </ListItemIcon>
-                                {props.movie.vote_average}
+                                Nota média: {props.movie.vote_average}
                             </ListItem>
                         </List>
                     </CardContent>
