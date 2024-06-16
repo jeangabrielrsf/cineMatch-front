@@ -1,18 +1,98 @@
-import styled from "styled-components"
+import { CalendarMonth, StarRate, ThumbUp } from "@mui/icons-material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Dialog,
+    DialogTitle,
+    Divider,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    Typography,
+} from "@mui/material";
+import { useState } from "react";
+import styled from "styled-components";
 
-export default function MovieContent(props: Readonly<{movie:any}>) {
+export default function MovieContent(props: Readonly<{ movie: any }>) {
+    const [openInfo, setOpenInfo] = useState(false);
+
+    function handleOpenDialog() {
+        setOpenInfo(true);
+    }
+
+    function handleCloseDialog() {
+        setOpenInfo(false);
+    }
+
     return (
-        <Wrapper>
-            <MoviePoster>
-                <img src={import.meta.env.VITE_BASE_POSTER_URL + props.movie.poster_path} alt={props.movie.original_title} />
-            </MoviePoster>
-        </Wrapper>
-    )
-
+        <>
+            <Box onClick={handleOpenDialog}>
+                <MoviePoster>
+                    <img
+                        src={
+                            import.meta.env.VITE_BASE_POSTER_URL +
+                            props.movie.poster_path
+                        }
+                        alt={props.movie.original_title}
+                    />
+                </MoviePoster>
+            </Box>
+            <Dialog open={openInfo} onClick={handleCloseDialog}>
+                <DialogTitle>{props.movie.title}</DialogTitle>
+                <Card
+                    sx={{
+                        maxWidth: "600px",
+                        overflowY: "scroll",
+                    }}
+                >
+                    <CardMedia
+                        component="img"
+                        height="300px"
+                        sx={{ objectFit: "contain", maxWidth: "100%" }}
+                        image={
+                            import.meta.env.VITE_BASE_POSTER_URL +
+                            props.movie.poster_path
+                        }
+                        alt={props.movie.title}
+                    />
+                    <CardContent>
+                        <List>
+                            <ListItem>
+                                <Typography>{props.movie.overview}</Typography>
+                            </ListItem>
+                            <Divider />
+                            <ListItem>
+                                <ListItemIcon>
+                                    <CalendarMonth />
+                                </ListItemIcon>
+                                Data de lançamento: {props.movie.release_date}
+                            </ListItem>
+                            <Divider />
+                            <ListItem>
+                                <ListItemIcon>
+                                    <StarRate />
+                                </ListItemIcon>
+                                {props.movie.vote_average}
+                            </ListItem>
+                        </List>
+                    </CardContent>
+                    <CardActions
+                        sx={{ display: "flex", justifyContent: "center" }}
+                    >
+                        <Button variant="contained">
+                            Adicionar aos favoritos
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Dialog>
+        </>
+    );
 }
-
-const Wrapper = styled.div`
-`;
 
 const MoviePoster = styled.div`
     margin: 5px 10px;
@@ -22,7 +102,7 @@ const MoviePoster = styled.div`
         object-fit: cover;
     }
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         filter: brightness(110%);
         transform: scale(1.05);
