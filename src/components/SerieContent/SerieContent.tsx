@@ -1,5 +1,9 @@
+import UserTokenContext from "@/contexts/authContext";
+import { likeAMovie, likeASerie } from "@/services/cinematch";
+import { MovieData, SerieData } from "@/utils/contentUtils";
 import { CalendarMonth, StarRate } from "@mui/icons-material";
 import {
+    Alert,
     Box,
     Button,
     Card,
@@ -12,14 +16,18 @@ import {
     List,
     ListItem,
     ListItemIcon,
+    Snackbar,
     Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
 
 export default function SerieContent(props: Readonly<{ serie: any }>) {
     const [openInfo, setOpenInfo] = useState(false);
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackStatus, setSnackStatus] = useState("");
+    const userToken = useContext(UserTokenContext)?.userToken;
     const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
@@ -28,6 +36,35 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
 
     function handleCloseDialog() {
         setOpenInfo(false);
+    }
+
+    function handleSnackBarOpen(status: string) {
+        setSnackStatus(status);
+        setOpenSnack(true);
+    }
+
+    function handleSnackBarClose() {
+        setOpenSnack(false);
+    }
+
+    async function handleLikeSerie() {
+        if (!userToken) {
+            // usuário não logado!
+            return;
+        }
+        const serieData: SerieData = {
+            name: props.serie.name,
+            overview: props.serie.overview,
+            tmdb_id: props.serie.id,
+            popularity: props.serie.popularity,
+            vote_average: props.serie.vote_average,
+            vote_count: props.serie.vote_count,
+        };
+        try {
+            const response = await likeASerie(userToken, serieData);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -85,12 +122,45 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
                     <CardActions
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
-                        <Button variant="contained">
-                            Adicionar aos favoritos
-                        </Button>
+                        {userToken ? (
+                            <Button
+                                variant="contained"
+                                onClick={handleLikeSerie}
+                            >
+                                Adicionar aos favoritos
+                            </Button>
+                        ) : (
+                            <Button variant="contained" disabled>
+                                Entre para adicionar este conteúdo aos
+                                favoritos!
+                            </Button>
+                        )}
                     </CardActions>
                 </Card>
             </Dialog>
+            <Snackbar
+                open={openSnack}
+                autoHideDuration={5000}
+                onClose={handleSnackBarClose}
+            >
+                {snackStatus === "success" ? (
+                    <Alert
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Série adicionada com sucesso!
+                    </Alert>
+                ) : (
+                    <Alert
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Não foi possível incluir!
+                    </Alert>
+                )}
+            </Snackbar>
         </>
     );
 }

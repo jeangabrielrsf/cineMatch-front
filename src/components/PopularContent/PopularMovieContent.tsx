@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { getPopularMovies } from "@/services/moviesApi";
 import MovieContent from "../MovieContent/MovieContent";
 import styled from "styled-components";
+import MoviesContext from "@/contexts/movieContext";
 
 export default function PopularMovieContent() {
-    const [popularMovies, setPopularMovies] = useState([]);
+    const { popularMovies, setPopularMovies } = useContext(MoviesContext);
 
     const fetchMoviesData = useCallback(async () => {
         const data = await getPopularMovies();

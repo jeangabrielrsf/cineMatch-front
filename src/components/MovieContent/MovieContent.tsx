@@ -125,9 +125,19 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
                     <CardActions
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
-                        <Button variant="contained" onClick={handleLikeMovie}>
-                            Adicionar aos favoritos
-                        </Button>
+                        {userToken ? (
+                            <Button
+                                variant="contained"
+                                onClick={handleLikeMovie}
+                            >
+                                Adicionar aos favoritos
+                            </Button>
+                        ) : (
+                            <Button variant="contained" disabled>
+                                Entre para adicionar este conteúdo aos
+                                favoritos!
+                            </Button>
+                        )}
                     </CardActions>
                 </Card>
             </Dialog>
