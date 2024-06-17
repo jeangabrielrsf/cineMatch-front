@@ -4,9 +4,9 @@ export async function getPopularMovies() {
     return response.data;
 }
 
-export async function searchMovie(query: string) {
+export async function searchAContent(query: string) {
     const response = await api.get(
-        `search/movie?query=${query}&language=pt-BR`
+        `search/multi?query=${query}&language=pt-BR`
     );
     return response.data;
 }
