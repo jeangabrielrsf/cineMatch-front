@@ -1,6 +1,7 @@
 import { register } from "@/services/auth";
 import { UserRegisterData } from "@/utils/formUtils";
 import {
+    Alert,
     Backdrop,
     Button,
     CircularProgress,
@@ -9,12 +10,16 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Snackbar,
     TextField,
 } from "@mui/material";
 import { FormEvent, useState } from "react";
 
 export default function SignupDialog({ openDialog, setOpenDialog }) {
     const [loading, setLoading] = useState(false);
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackStatus, setSnackStatus] = useState("");
+
     function handleCloseDialog() {
         setOpenDialog(false);
     }
@@ -25,6 +30,15 @@ export default function SignupDialog({ openDialog, setOpenDialog }) {
 
     function handleCloseLoading() {
         setLoading(false);
+    }
+
+    function handleSnackBarOpen(status: string) {
+        setSnackStatus(status);
+        setOpenSnack(true);
+    }
+
+    function handleSnackBarClose() {
+        setOpenSnack(false);
     }
 
     async function handleRegisterSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,8 +53,10 @@ export default function SignupDialog({ openDialog, setOpenDialog }) {
         };
         try {
             const response = await register(data);
+            handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
+            handleSnackBarOpen("error");
         }
         handleCloseLoading();
         handleCloseDialog();
@@ -103,6 +119,29 @@ export default function SignupDialog({ openDialog, setOpenDialog }) {
             <Backdrop open={loading}>
                 <CircularProgress />
             </Backdrop>
+            <Snackbar
+                open={openSnack}
+                autoHideDuration={5000}
+                onClose={handleSnackBarClose}
+            >
+                {snackStatus === "success" ? (
+                    <Alert
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Cadastro efetuado com sucesso!
+                    </Alert>
+                ) : (
+                    <Alert
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Erro ao cadastrar!
+                    </Alert>
+                )}
+            </Snackbar>
         </>
     );
 }

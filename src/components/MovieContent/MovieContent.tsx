@@ -48,7 +48,6 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
     }
 
     async function handleLikeMovie() {
-        console.log(userToken);
         if (!userToken) {
             return;
         }
@@ -62,7 +61,6 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
         };
         try {
             const response = await likeAMovie(userToken, movieData);
-            console.log(response);
             handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);

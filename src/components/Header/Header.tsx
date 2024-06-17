@@ -24,7 +24,7 @@ import LoginDialog from "../LoginDialog";
 import SignupDialog from "../SignupDialog";
 import UserTokenContext from "@/contexts/authContext";
 import MoviesContext from "@/contexts/movieContext";
-import { searchMovie } from "@/services/moviesApi";
+import { searchAContent } from "@/services/moviesApi";
 
 export default function Header() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -75,7 +75,7 @@ export default function Header() {
 
         setLoadingSearch(true);
         try {
-            const data = await searchMovie(query);
+            const data = await searchAContent(query);
             console.log(data);
             setOptions(data.results);
         } catch (error) {

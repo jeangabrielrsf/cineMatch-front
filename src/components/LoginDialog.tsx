@@ -2,6 +2,7 @@ import UserTokenContext from "@/contexts/authContext";
 import { login } from "@/services/auth";
 import { UserLoginData } from "@/utils/formUtils";
 import {
+    Alert,
     Backdrop,
     Button,
     CircularProgress,
@@ -10,12 +11,15 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Snackbar,
     TextField,
 } from "@mui/material";
 import { FormEvent, useContext, useState } from "react";
 
 export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
     const [loading, setLoading] = useState(false);
+    const [openSnack, setOpenSnack] = useState(false);
+    const [snackStatus, setSnackStatus] = useState("");
 
     function handleCloseDialog() {
         setOpenDialog(false);
@@ -29,6 +33,15 @@ export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
         setLoading(false);
     }
 
+    function handleSnackBarOpen(status: string) {
+        setSnackStatus(status);
+        setOpenSnack(true);
+    }
+
+    function handleSnackBarClose() {
+        setOpenSnack(false);
+    }
+
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         handleOpenLoading();
         event.preventDefault();
@@ -40,10 +53,11 @@ export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
         };
         try {
             const response = await login(data);
-            console.log(response);
             setAuth(response.access_token);
+            handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
+            handleSnackBarOpen("error");
         }
         handleCloseLoading();
         handleCloseDialog();
@@ -95,6 +109,29 @@ export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
             <Backdrop open={loading}>
                 <CircularProgress />
             </Backdrop>
+            <Snackbar
+                open={openSnack}
+                autoHideDuration={5000}
+                onClose={handleSnackBarClose}
+            >
+                {snackStatus === "success" ? (
+                    <Alert
+                        severity="success"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Login efetuado com sucesso!
+                    </Alert>
+                ) : (
+                    <Alert
+                        severity="error"
+                        variant="filled"
+                        sx={{ width: "100%" }}
+                    >
+                        Erro ao logar!
+                    </Alert>
+                )}
+            </Snackbar>
         </>
     );
 }

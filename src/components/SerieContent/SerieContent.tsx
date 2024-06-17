@@ -62,8 +62,10 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
         };
         try {
             const response = await likeASerie(userToken, serieData);
+            handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
+            handleSnackBarOpen("error");
         }
     }
 
