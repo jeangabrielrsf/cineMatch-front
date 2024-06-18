@@ -36,6 +36,7 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
     const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
+        isSerieFavorited();
         setOpenInfo(true);
     }
 
