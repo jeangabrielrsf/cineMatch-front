@@ -1,6 +1,7 @@
 import UserTokenContext from "@/contexts/authContext";
 import { login } from "@/services/auth";
 import { UserLoginData } from "@/utils/formUtils";
+import { LoginDialogProps } from "@/utils/loginDialogUtils";
 import {
     Alert,
     Backdrop,
@@ -16,7 +17,12 @@ import {
 } from "@mui/material";
 import { FormEvent, useContext, useState } from "react";
 
-export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
+export default function LoginDialog({
+    openDialog,
+    setOpenDialog,
+    setAuth,
+    setAnchorEl = () => {},
+}: LoginDialogProps) {
     const [loading, setLoading] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
@@ -61,6 +67,7 @@ export default function LoginDialog({ openDialog, setOpenDialog, setAuth }) {
         }
         handleCloseLoading();
         handleCloseDialog();
+        setAnchorEl(null);
     }
 
     return (

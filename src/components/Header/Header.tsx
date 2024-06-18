@@ -7,6 +7,7 @@ import {
     IconButton,
     Menu,
     MenuItem,
+    Stack,
     TextField,
     Toolbar,
     Typography,
@@ -35,7 +36,7 @@ export default function Header() {
     const [loadingSearch, setLoadingSearch] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [options, setOptions] = useState([]);
-    const pages = ["filmes", "séries"];
+    const pages = ["filmes populares", "séries populares"];
     const navigate = useNavigate();
 
     function handleMenu(event: ChangeEvent<HTMLElement>) {
@@ -99,40 +100,59 @@ export default function Header() {
     return (
         <AppBar
             position="static"
-            sx={{ padding: "10px", backgroundColor: "#3282B8" }}
+            sx={{ padding: "10px", backgroundColor: "#FB8500" }}
         >
-            <Toolbar disableGutters>
-                <Typography
-                    variant="h5"
-                    component="div"
-                    onClick={() => navigate("/")}
-                >
-                    CineMatch
-                </Typography>
+            <Toolbar
+                disableGutters
+                sx={{
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <Stack direction="row" flexGrow={0}>
+                    <Typography
+                        variant="h3"
+                        onClick={() => navigate("/")}
+                        textAlign="center"
+                    >
+                        CineMatch
+                    </Typography>
 
-                <Box sx={{ display: "flex", flexGrow: 1 }}>
-                    {pages.map((page) => (
-                        <Button
-                            variant="outlined"
-                            key={page}
-                            sx={{
-                                marginLeft: "5px",
-                                marginRight: "5px",
-                                color: "white",
-                                display: "block",
-                            }}
-                            onClick={() => {
-                                if (page === "séries") {
-                                    navigate("/series-populares");
-                                } else {
-                                    navigate("/filmes-populares");
-                                }
-                            }}
-                        >
-                            {page}
-                        </Button>
-                    ))}
-                </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                        }}
+                    >
+                        {pages.map((page) => (
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                key={page}
+                                sx={{
+                                    marginLeft: "5px",
+                                    marginRight: "5px",
+                                    display: "block",
+                                    color: "#fff",
+                                    backgroundColor: "#023047",
+                                    ":hover": {
+                                        backgroundColor: "#023047",
+                                        transform: "scale(1.05)",
+                                    },
+                                }}
+                                onClick={() => {
+                                    if (page === "séries populares") {
+                                        navigate("/series-populares");
+                                    } else {
+                                        navigate("/filmes-populares");
+                                    }
+                                }}
+                            >
+                                {page}
+                            </Button>
+                        ))}
+                    </Box>
+                </Stack>
+
                 <Autocomplete
                     sx={{ width: "300px" }}
                     options={options}
@@ -209,9 +229,6 @@ export default function Header() {
                                   </MenuItem>,
                               ]
                             : [
-                                  <MenuItem onClick={handleClose} key="profile">
-                                      Perfil
-                                  </MenuItem>,
                                   <MenuItem onClick={handleClose} key="likes">
                                       Minhas Curtidas
                                   </MenuItem>,
@@ -224,10 +241,12 @@ export default function Header() {
                         openDialog={openLoginDialog}
                         setOpenDialog={setOpenLoginDialog}
                         setAuth={setUserToken}
+                        setAnchorEl={setAnchorEl}
                     />
                     <SignupDialog
                         openDialog={openRegisterDialog}
                         setOpenDialog={setOpenRegisterDialog}
+                        setAnchorEl={setAnchorEl}
                     />
                 </div>
             </Toolbar>

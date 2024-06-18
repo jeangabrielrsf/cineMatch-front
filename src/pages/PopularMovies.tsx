@@ -7,7 +7,7 @@ export default function PopularMovies() {
         <Box sx={{ padding: "10px" }}>
             <Typography
                 variant="h2"
-                color="#BBE1FA"
+                color="#F07B3F"
                 justifyContent="center"
                 display="flex"
             >

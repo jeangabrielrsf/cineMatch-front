@@ -15,7 +15,11 @@ import {
 } from "@mui/material";
 import { FormEvent, useState } from "react";
 
-export default function SignupDialog({ openDialog, setOpenDialog }) {
+export default function SignupDialog({
+    openDialog,
+    setOpenDialog,
+    setAnchorEl,
+}) {
     const [loading, setLoading] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
@@ -60,6 +64,7 @@ export default function SignupDialog({ openDialog, setOpenDialog }) {
         }
         handleCloseLoading();
         handleCloseDialog();
+        setAnchorEl(null);
     }
 
     return (
