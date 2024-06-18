@@ -54,13 +54,13 @@ export default function PopularSeriesContent() {
             <Stack spacing={2}>
                 <Pagination
                     onChange={handlePage}
+                    variant="outlined"
                     count={20}
                     size="large"
+                    color="custom"
                     sx={{
-                        border: "1px solid black",
                         display: "flex",
                         justifyContent: "center",
-                        color: "#fff",
                     }}
                 />
             </Stack>

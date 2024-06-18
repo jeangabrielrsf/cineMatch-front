@@ -15,6 +15,7 @@ import {
     Container,
     Grid,
     Pagination,
+    PaginationItem,
     Stack,
 } from "@mui/material";
 
@@ -55,18 +56,18 @@ export default function PopularMovieContent() {
                     )}
                 </MoviesContainer>
             </Grid>
-            <Stack spacing={2}>
+            <Stack spacing={0}>
                 <Pagination
                     onChange={handlePage}
+                    variant="outlined"
                     count={20}
                     size="large"
+                    color={"custom"}
                     sx={{
-                        border: "1px solid black",
                         display: "flex",
                         justifyContent: "center",
-                        color: "#fff",
                     }}
-                />
+                ></Pagination>
             </Stack>
         </Container>
     );
