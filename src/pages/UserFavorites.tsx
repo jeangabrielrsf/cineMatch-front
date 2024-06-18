@@ -53,7 +53,10 @@ export default function UserFavorites() {
                         likedMovies.map((movie, index) => {
                             return (
                                 <Grid item key={index}>
-                                    <MovieContent movie={movie} />
+                                    <MovieContent
+                                        movie={movie}
+                                        tmdb_id={movie.tmdb_id}
+                                    />
                                 </Grid>
                             );
                         })
@@ -82,7 +85,10 @@ export default function UserFavorites() {
                         likedSeries.map((serie, index) => {
                             return (
                                 <Grid item key={index}>
-                                    <SerieContent serie={serie} />
+                                    <SerieContent
+                                        serie={serie}
+                                        tmdb_id={serie.tmdb_id}
+                                    />
                                 </Grid>
                             );
                         })

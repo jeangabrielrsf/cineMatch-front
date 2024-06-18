@@ -26,7 +26,9 @@ import dayjs from "dayjs";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 
-export default function MovieContent(props: Readonly<{ movie: any }>) {
+export default function MovieContent(
+    props: Readonly<{ movie: any; tmdb_id?: number }>
+) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
@@ -91,8 +93,13 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
 
     async function handleMovieProviders() {
         setLoading(true);
+        let data;
         try {
-            const data = await getMovieWatchProvider(props.movie.id);
+            if (props.tmdb_id) {
+                data = await getMovieWatchProvider(props.tmdb_id);
+            } else {
+                data = await getMovieWatchProvider(props.movie.id);
+            }
             console.log(data.results.BR?.flatrate);
             let providers = data.results.BR?.flatrate;
             setWatchProviders(providers);

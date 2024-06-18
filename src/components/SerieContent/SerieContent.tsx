@@ -30,7 +30,9 @@ import dayjs from "dayjs";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 
-export default function SerieContent(props: Readonly<{ serie: any }>) {
+export default function SerieContent(
+    props: Readonly<{ serie: any; tmdb_id?: number }>
+) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
@@ -95,8 +97,13 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
 
     async function handleSerieProviders() {
         setLoading(true);
+        let data;
         try {
-            const data = await getSerieWatchProvider(props.serie.id);
+            if (props.tmdb_id) {
+                data = await getSerieWatchProvider(props.tmdb_id);
+            } else {
+                data = await getSerieWatchProvider(props.serie.id);
+            }
             let providers = data.results.BR?.flatrate;
             setWatchProviders(providers);
         } catch (error) {
