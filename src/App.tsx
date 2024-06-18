@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "@/reset.css";
 import "./App.css";
 import { RouterProvider } from "react-router-dom";
@@ -11,16 +11,23 @@ function App() {
     const [userToken, setUserToken] = useState("");
     const [popularMovies, setPopularMovies] = useState([]);
     const [allMovies, setAllMovies] = useState([]);
+    const userTokenContextValue = useMemo(
+        () => ({ userToken, setUserToken }),
+        [userToken, setUserToken]
+    );
+    const moviesContextValue = useMemo(
+        () => ({
+            popularMovies,
+            setPopularMovies,
+            allMovies,
+            setAllMovies,
+        }),
+        [popularMovies, setPopularMovies, allMovies, setAllMovies]
+    );
+
     return (
-        <UserTokenContext.Provider value={{ userToken, setUserToken }}>
-            <MoviesContext.Provider
-                value={{
-                    popularMovies,
-                    setPopularMovies,
-                    allMovies,
-                    setAllMovies,
-                }}
-            >
+        <UserTokenContext.Provider value={userTokenContextValue}>
+            <MoviesContext.Provider value={moviesContextValue}>
                 <RouterProvider router={router} />
             </MoviesContext.Provider>
         </UserTokenContext.Provider>
