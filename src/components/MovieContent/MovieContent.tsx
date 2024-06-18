@@ -1,5 +1,5 @@
 import UserTokenContext from "@/contexts/authContext";
-import { likeAMovie } from "@/services/cinematch";
+import { getUserLikedMovies, likeAMovie } from "@/services/cinematch";
 import { MovieData } from "@/utils/contentUtils";
 import { CalendarMonth, StarRate } from "@mui/icons-material";
 import {
@@ -27,10 +27,12 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
+    const [isLiked, setIsLiked] = useState(false);
     const releaseDate = dayjs(props.movie.release_date).format("DD/MM/YYYY");
-    const userToken = useContext(UserTokenContext)?.userToken;
+    const userToken = useContext(UserTokenContext).userToken;
 
     function handleOpenDialog() {
+        isMovieFavorited();
         setOpenInfo(true);
     }
 
@@ -45,6 +47,16 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
 
     function handleSnackBarClose() {
         setOpenSnack(false);
+    }
+
+    async function isMovieFavorited() {
+        const data = await getUserLikedMovies(userToken);
+        const likedMovies = data.liked_movies;
+        console.log(props.movie);
+        for (let movie of likedMovies) {
+            console.log(movie.title == props.movie.title);
+            if (movie.title == props.movie.title) setIsLiked(true);
+        }
     }
 
     async function handleLikeMovie() {
@@ -126,12 +138,18 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         {userToken ? (
-                            <Button
-                                variant="contained"
-                                onClick={handleLikeMovie}
-                            >
-                                Adicionar aos favoritos
-                            </Button>
+                            isLiked != true ? (
+                                <Button
+                                    variant="contained"
+                                    onClick={handleLikeMovie}
+                                >
+                                    Adicionar aos favoritos
+                                </Button>
+                            ) : (
+                                <Button variant="contained" disabled>
+                                    Filme já favoritado!
+                                </Button>
+                            )
                         ) : (
                             <Button variant="contained" disabled>
                                 Entre para adicionar este conteúdo aos

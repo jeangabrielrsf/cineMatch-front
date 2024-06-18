@@ -1,5 +1,9 @@
 import UserTokenContext from "@/contexts/authContext";
-import { likeAMovie, likeASerie } from "@/services/cinematch";
+import {
+    getUserLikedSeries,
+    likeAMovie,
+    likeASerie,
+} from "@/services/cinematch";
 import { MovieData, SerieData } from "@/utils/contentUtils";
 import { CalendarMonth, StarRate } from "@mui/icons-material";
 import {
@@ -27,7 +31,8 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
-    const userToken = useContext(UserTokenContext)?.userToken;
+    const [isLiked, setIsLiked] = useState(false);
+    const userToken = useContext(UserTokenContext).userToken;
     const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
@@ -45,6 +50,15 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
 
     function handleSnackBarClose() {
         setOpenSnack(false);
+    }
+
+    async function isSerieFavorited() {
+        const data = await getUserLikedSeries(userToken);
+        const likedMovies = data.liked_series;
+        for (let movie of likedMovies) {
+            console.log(movie.title == props.serie.title);
+            if (movie.title == props.serie.title) setIsLiked(true);
+        }
     }
 
     async function handleLikeSerie() {
@@ -127,12 +141,18 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
                         sx={{ display: "flex", justifyContent: "center" }}
                     >
                         {userToken ? (
-                            <Button
-                                variant="contained"
-                                onClick={handleLikeSerie}
-                            >
-                                Adicionar aos favoritos
-                            </Button>
+                            isLiked != true ? (
+                                <Button
+                                    variant="contained"
+                                    onClick={handleLikeSerie}
+                                >
+                                    Adicionar aos favoritos
+                                </Button>
+                            ) : (
+                                <Button variant="contained" disabled>
+                                    Seriado já favoritado!
+                                </Button>
+                            )
                         ) : (
                             <Button variant="contained" disabled>
                                 Entre para adicionar este conteúdo aos
