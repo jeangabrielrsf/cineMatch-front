@@ -46,6 +46,11 @@ export default function Header() {
         setAnchorEl(null);
     }
 
+    function handleChangePage() {
+        navigate("/favoritos");
+        handleClose();
+    }
+
     function handleOpenLoginDialog() {
         setOpenLoginDialog(true);
     }
@@ -100,7 +105,7 @@ export default function Header() {
     return (
         <AppBar
             position="static"
-            sx={{ padding: "10px", backgroundColor: "#FB8500" }}
+            sx={{ padding: "10px", backgroundColor: "#219EBC" }}
         >
             <Toolbar
                 disableGutters
@@ -133,9 +138,9 @@ export default function Header() {
                                     marginRight: "5px",
                                     display: "block",
                                     color: "#fff",
-                                    backgroundColor: "#023047",
+                                    backgroundColor: "#9381ff",
                                     ":hover": {
-                                        backgroundColor: "#023047",
+                                        backgroundColor: "#9381ff",
                                         transform: "scale(1.05)",
                                     },
                                 }}
@@ -229,8 +234,11 @@ export default function Header() {
                                   </MenuItem>,
                               ]
                             : [
-                                  <MenuItem onClick={handleClose} key="likes">
-                                      Minhas Curtidas
+                                  <MenuItem
+                                      onClick={handleChangePage}
+                                      key="likes"
+                                  >
+                                      Meus Favoritos
                                   </MenuItem>,
                                   <MenuItem onClick={handleLogout} key="logout">
                                       Logout

@@ -7,7 +7,7 @@ export default function PopularSeries() {
         <Box sx={{ padding: "10px" }}>
             <Typography
                 variant="h2"
-                color="#F07B3F"
+                color="#fff"
                 justifyContent="center"
                 display="flex"
             >

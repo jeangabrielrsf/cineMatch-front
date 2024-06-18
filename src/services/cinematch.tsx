@@ -18,3 +18,23 @@ export async function likeASerie(token: string, data: SerieData) {
     });
     return response.data;
 }
+
+export async function getUserLikedMovies(token: string) {
+    const response = await backApi.get("/movies/", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data;
+}
+
+export async function getUserLikedSeries(token: string) {
+    const response = await backApi.get("/series/", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return response.data;
+}

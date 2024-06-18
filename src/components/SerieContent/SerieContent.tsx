@@ -59,6 +59,8 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
             popularity: props.serie.popularity,
             vote_average: props.serie.vote_average,
             vote_count: props.serie.vote_count,
+            poster_path: props.serie.poster_path,
+            first_air_date: props.serie.first_air_date,
         };
         try {
             const response = await likeASerie(userToken, serieData);

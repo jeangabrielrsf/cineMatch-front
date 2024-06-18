@@ -5,6 +5,8 @@ export interface MovieData {
     popularity: number;
     vote_average: number;
     vote_count: number;
+    poster_path: string;
+    release_date: string;
 }
 
 export interface SerieData {
@@ -14,4 +16,6 @@ export interface SerieData {
     popularity: number;
     vote_average: number;
     vote_count: number;
+    poster_path: string;
+    first_air_date: string;
 }

@@ -34,7 +34,7 @@ export default function HomePage() {
                 flexDirection: "column",
             }}
         >
-            <Typography variant="h3" sx={{ color: "#F07B3F" }}>
+            <Typography variant="h3" sx={{ color: "#fff" }}>
                 Cansou de perder tempo pensando no que assistir? Deixa com a
                 gente!
             </Typography>
@@ -76,9 +76,9 @@ export default function HomePage() {
                     onClick={handleClickButton}
                     size="large"
                     sx={{
-                        backgroundColor: "#FB8500",
+                        backgroundColor: "#9381ff",
                         ":hover": {
-                            backgroundColor: "#FB8500",
+                            backgroundColor: "#9381ff",
                             transform: "scale(1.2)",
                         },
                     }}

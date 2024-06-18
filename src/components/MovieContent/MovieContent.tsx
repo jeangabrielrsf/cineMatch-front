@@ -58,6 +58,8 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
             popularity: props.movie.popularity,
             vote_average: props.movie.vote_average,
             vote_count: props.movie.vote_count,
+            poster_path: props.movie.poster_path,
+            release_date: props.movie.release_date,
         };
         try {
             const response = await likeAMovie(userToken, movieData);
@@ -166,7 +168,7 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
     );
 }
 
-const MoviePoster = styled.div`
+export const MoviePoster = styled.div`
     margin: 5px 10px;
     img {
         width: 100%;
