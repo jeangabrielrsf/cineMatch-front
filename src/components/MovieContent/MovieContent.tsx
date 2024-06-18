@@ -1,7 +1,8 @@
 import UserTokenContext from "@/contexts/authContext";
 import { getUserLikedMovies, likeAMovie } from "@/services/cinematch";
+import { getMovieWatchProvider } from "@/services/moviesApi";
 import { MovieData } from "@/utils/contentUtils";
-import { CalendarMonth, StarRate } from "@mui/icons-material";
+import { CalendarMonth, LocalMovies, StarRate } from "@mui/icons-material";
 import {
     Alert,
     Box,
@@ -10,6 +11,7 @@ import {
     CardActions,
     CardContent,
     CardMedia,
+    CircularProgress,
     Dialog,
     DialogTitle,
     Divider,
@@ -17,6 +19,7 @@ import {
     ListItem,
     ListItemIcon,
     Snackbar,
+    Stack,
     Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
@@ -28,10 +31,15 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
     const [isLiked, setIsLiked] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [watchProviders, setWatchProviders] = useState<Object | undefined>(
+        []
+    );
     const releaseDate = dayjs(props.movie.release_date).format("DD/MM/YYYY");
     const userToken = useContext(UserTokenContext).userToken;
 
     function handleOpenDialog() {
+        handleMovieProviders();
         isMovieFavorited();
         setOpenInfo(true);
     }
@@ -79,6 +87,19 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
             console.error(error);
             handleSnackBarOpen("error");
         }
+    }
+
+    async function handleMovieProviders() {
+        setLoading(true);
+        try {
+            const data = await getMovieWatchProvider(props.movie.id);
+            console.log(data.results.BR?.flatrate);
+            let providers = data.results.BR?.flatrate;
+            setWatchProviders(providers);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
     }
 
     return (
@@ -130,6 +151,36 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
                                     <StarRate />
                                 </ListItemIcon>
                                 Nota média: {props.movie.vote_average}
+                            </ListItem>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <LocalMovies />
+                                </ListItemIcon>
+                                Onde assistir:
+                                <Stack direction="column">
+                                    {loading ? (
+                                        <CircularProgress size={30} />
+                                    ) : watchProviders != undefined ? (
+                                        watchProviders.map((provider) => {
+                                            return (
+                                                <Box
+                                                    border={"1px solid gray"}
+                                                    display="flex"
+                                                    justifyContent="center"
+                                                >
+                                                    <Typography>
+                                                        {provider.provider_name}
+                                                    </Typography>
+                                                </Box>
+                                            );
+                                        })
+                                    ) : (
+                                        <Typography>
+                                            Não há streamings disponíveis para
+                                            esse filme :c
+                                        </Typography>
+                                    )}
+                                </Stack>
                             </ListItem>
                         </List>
                     </CardContent>

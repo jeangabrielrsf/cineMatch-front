@@ -10,3 +10,8 @@ export async function searchAContent(query: string) {
     );
     return response.data;
 }
+
+export async function getMovieWatchProvider(id: number) {
+    const response = await api.get(`movie/${id}/watch/providers`);
+    return response.data;
+}

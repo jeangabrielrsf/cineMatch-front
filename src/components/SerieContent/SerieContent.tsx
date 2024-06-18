@@ -4,8 +4,9 @@ import {
     likeAMovie,
     likeASerie,
 } from "@/services/cinematch";
+import { getSerieWatchProvider } from "@/services/seriesApi";
 import { MovieData, SerieData } from "@/utils/contentUtils";
-import { CalendarMonth, StarRate } from "@mui/icons-material";
+import { CalendarMonth, LocalMovies, StarRate } from "@mui/icons-material";
 import {
     Alert,
     Box,
@@ -14,6 +15,7 @@ import {
     CardActions,
     CardContent,
     CardMedia,
+    CircularProgress,
     Dialog,
     DialogTitle,
     Divider,
@@ -21,6 +23,7 @@ import {
     ListItem,
     ListItemIcon,
     Snackbar,
+    Stack,
     Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
@@ -32,10 +35,15 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
     const [openSnack, setOpenSnack] = useState(false);
     const [snackStatus, setSnackStatus] = useState("");
     const [isLiked, setIsLiked] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [watchProviders, setWatchProviders] = useState<Object | undefined>(
+        []
+    );
     const userToken = useContext(UserTokenContext).userToken;
     const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
+        handleSerieProviders();
         isSerieFavorited();
         setOpenInfo(true);
     }
@@ -83,6 +91,18 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
             console.error(error);
             handleSnackBarOpen("error");
         }
+    }
+
+    async function handleSerieProviders() {
+        setLoading(true);
+        try {
+            const data = await getSerieWatchProvider(props.serie.id);
+            let providers = data.results.BR?.flatrate;
+            setWatchProviders(providers);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
     }
 
     return (
@@ -134,6 +154,36 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
                                     <StarRate />
                                 </ListItemIcon>
                                 Nota média: {props.serie.vote_average}
+                            </ListItem>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <LocalMovies />
+                                </ListItemIcon>
+                                Onde assistir:
+                                <Stack direction="column">
+                                    {loading ? (
+                                        <CircularProgress size={30} />
+                                    ) : watchProviders != undefined ? (
+                                        watchProviders.map((provider) => {
+                                            return (
+                                                <Box
+                                                    border={"1px solid gray"}
+                                                    display="flex"
+                                                    justifyContent="center"
+                                                >
+                                                    <Typography>
+                                                        {provider.provider_name}
+                                                    </Typography>
+                                                </Box>
+                                            );
+                                        })
+                                    ) : (
+                                        <Typography>
+                                            Não há streamings disponíveis para
+                                            esse seriado :c
+                                        </Typography>
+                                    )}
+                                </Stack>
                             </ListItem>
                         </List>
                     </CardContent>
