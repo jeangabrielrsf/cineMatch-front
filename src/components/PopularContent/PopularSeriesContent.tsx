@@ -34,22 +34,20 @@ export default function PopularSeriesContent() {
     return (
         <Container>
             <Grid container columns={4}>
-                {loading == true ? (
-                    <Box display={"flex"} justifyContent={"center"}>
-                        <CircularProgress
-                            size="large"
-                            sx={{ margin: "5px auto" }}
-                        />
-                    </Box>
-                ) : (
-                    popularSeries.map((serie, index) => {
-                        return (
-                            <SeriesContainer key={index}>
-                                <SerieContent serie={serie} />
-                            </SeriesContainer>
-                        );
-                    })
-                )}
+                <SeriesContainer>
+                    {loading == true ? (
+                        <Box display={"flex"} justifyContent={"center"}>
+                            <CircularProgress
+                                size="large"
+                                sx={{ margin: "5px auto" }}
+                            />
+                        </Box>
+                    ) : (
+                        popularSeries.map((serie, index) => {
+                            return <SerieContent serie={serie} key={index} />;
+                        })
+                    )}
+                </SeriesContainer>
             </Grid>
             <Stack spacing={2}>
                 <Pagination
