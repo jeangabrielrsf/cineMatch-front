@@ -24,7 +24,6 @@ import { useNavigate } from "react-router-dom";
 import LoginDialog from "../LoginDialog";
 import SignupDialog from "../SignupDialog";
 import UserTokenContext from "@/contexts/authContext";
-import MoviesContext from "@/contexts/movieContext";
 import { searchAContent } from "@/services/moviesApi";
 
 export default function Header() {

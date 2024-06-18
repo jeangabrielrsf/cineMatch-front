@@ -6,16 +6,28 @@ import {
     Card,
     CardContent,
     Stack,
+    Step,
+    StepButton,
+    StepContent,
+    StepLabel,
     Stepper,
     Typography,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
     const navigate = useNavigate();
+    const [activeStep, setActiveStep] = useState(0);
+    const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
     const [openDialog, setOpenDialog] = useState(false);
     const { userToken, setUserToken } = useContext(UserTokenContext);
+
+    const steps = [
+        "Navegue entre os conteúdos mais populares",
+        "Adicione conteúdos que você gostou em sua lista de favoritos",
+        "Recomendaremos conteúdos de acordo com o seu gosto!",
+    ];
 
     function handleClickButton() {
         if (!userToken) {
@@ -23,6 +35,10 @@ export default function HomePage() {
         } else {
             navigate("/recomendacoes");
         }
+    }
+
+    function handleStep(step: number) {
+        setActiveStep(step);
     }
 
     return (
@@ -35,43 +51,51 @@ export default function HomePage() {
             }}
         >
             <Typography variant="h3" sx={{ color: "#fff" }}>
-                Cansou de perder tempo pensando no que assistir? Deixa com a
-                gente!
+                Cansou de perder tempo pensando no que assistir?
+            </Typography>
+            <Typography variant="h3" sx={{ color: "#fff" }}>
+                Deixa com a gente!
             </Typography>
 
             <Typography></Typography>
             <Stack direction="row" spacing={2} margin={"50px"}>
                 <Card>
                     <CardContent>
-                        <Stepper></Stepper>
-                        <Typography>Navegue entre os conteúdos</Typography>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent>
-                        <Typography>
-                            Adicione-os à sua lista de favoritos
-                        </Typography>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent>
-                        <Typography>
-                            Receba recomendações com base nos seus favoritos
-                        </Typography>
+                        <Stepper
+                            activeStep={activeStep}
+                            nonLinear
+                            sx={{ color: "orange" }}
+                        >
+                            {steps.map((label, index) => (
+                                <Step key={label} completed={completed[index]}>
+                                    <StepButton
+                                        onClick={() => handleStep(index)}
+                                        color="#000"
+                                    >
+                                        <Typography>{label}</Typography>
+                                    </StepButton>
+                                </Step>
+                            ))}
+                        </Stepper>
                     </CardContent>
                 </Card>
             </Stack>
 
+            <Typography variant="h5" sx={{ color: "#fff" }}>
+                Clique no botão abaixo e veja recomendações personalizadas com
+                base no seu conteúdo favoritado
+            </Typography>
             <Box
                 sx={{
                     mx: "auto",
-                    width: "80%",
                     display: "flex",
+                    width: "30%",
                     justifyContent: "center",
+                    padding: "10px",
                 }}
             >
                 <Button
+                    fullWidth
                     variant="contained"
                     onClick={handleClickButton}
                     size="large"
