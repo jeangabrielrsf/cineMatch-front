@@ -1,6 +1,6 @@
 import api from "@/services/tmdbApi";
 
-export async function getPopularSeries() {
-    const response = await api.get("tv/popular?language=pt-BR&page=1");
+export async function getPopularSeries(page: number = 1) {
+    const response = await api.get(`tv/popular?language=pt-BR&page=${page}`);
     return response.data;
 }

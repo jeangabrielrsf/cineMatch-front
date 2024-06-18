@@ -55,10 +55,9 @@ export default function SerieContent(props: Readonly<{ serie: any }>) {
 
     async function isSerieFavorited() {
         const data = await getUserLikedSeries(userToken);
-        const likedMovies = data.liked_series;
-        for (let movie of likedMovies) {
-            console.log(movie.title == props.serie.title);
-            if (movie.title == props.serie.title) setIsLiked(true);
+        const likedSeries = data.liked_series;
+        for (let serie of likedSeries) {
+            if (serie.name == props.serie.name) setIsLiked(true);
         }
     }
 

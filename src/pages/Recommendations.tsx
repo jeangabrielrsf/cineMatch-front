@@ -11,6 +11,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 export default function Recommendations() {
     const [recommendedMovies, setRecommendedMovies] = useState([]);
     const [recommendedSeries, setRecommendedSeries] = useState([]);
+    const [loading, setLoading] = useState(true);
     const context = useContext(UserTokenContext);
 
     const { userToken } = context;
@@ -28,6 +29,7 @@ export default function Recommendations() {
     useEffect(() => {
         fecthRecommendedMovies().catch(console.error);
         fetchRecommendedSeries().catch(console.error);
+        setLoading(false);
     }, [fetchRecommendedSeries, fecthRecommendedMovies]);
 
     return (
@@ -42,8 +44,14 @@ export default function Recommendations() {
                     Recomendações de filmes
                 </Typography>
                 <Grid container spacing={3} justifyContent={"center"}>
-                    {recommendedMovies.length === 0 ? (
+                    {loading ? (
                         <CircularProgress />
+                    ) : recommendedMovies.length === 0 ? (
+                        <Box margin={"30px 0"}>
+                            <Typography variant="h6" color={"#fff"}>
+                                Adicione filmes aos favoritos!
+                            </Typography>
+                        </Box>
                     ) : (
                         recommendedMovies.map((movie, index) => {
                             return (
@@ -65,8 +73,14 @@ export default function Recommendations() {
                     Recomendações de seriados
                 </Typography>
                 <Grid container spacing={3} justifyContent={"center"}>
-                    {recommendedSeries.length === 0 ? (
+                    {loading ? (
                         <CircularProgress />
+                    ) : recommendedSeries.length === 0 ? (
+                        <Box margin={"30px 0"}>
+                            <Typography variant="h6" color={"#fff"}>
+                                Adicione seriados aos favoritos!
+                            </Typography>
+                        </Box>
                     ) : (
                         recommendedSeries.map((serie, index) => {
                             return (

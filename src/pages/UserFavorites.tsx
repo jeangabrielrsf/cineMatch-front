@@ -10,6 +10,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 export default function UserFavorites() {
     const [likedMovies, setLikedMovies] = useState([]);
     const [likedSeries, setLikedSeries] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { userToken } = useContext(UserTokenContext);
 
     const fetchLikedMovies = useCallback(async () => {
@@ -25,6 +26,7 @@ export default function UserFavorites() {
     useEffect(() => {
         fetchLikedMovies().catch(console.error);
         fetchLikedSeries().catch(console.error);
+        setLoading(false);
     }, [fetchLikedMovies, fetchLikedSeries]);
 
     return (
@@ -39,8 +41,14 @@ export default function UserFavorites() {
                     Seus filmes favoritos
                 </Typography>
                 <Grid container spacing={3} justifyContent={"center"}>
-                    {likedMovies.length === 0 ? (
+                    {loading ? (
                         <CircularProgress />
+                    ) : likedMovies.length === 0 ? (
+                        <Box margin={"30px 0"}>
+                            <Typography variant="h6" color="#fff">
+                                Você ainda não curtiu nenhum filme :C
+                            </Typography>
+                        </Box>
                     ) : (
                         likedMovies.map((movie, index) => {
                             return (
@@ -62,8 +70,14 @@ export default function UserFavorites() {
                     Seus seriados favoritos
                 </Typography>
                 <Grid container spacing={3} justifyContent={"center"}>
-                    {likedSeries.length === 0 ? (
+                    {loading ? (
                         <CircularProgress />
+                    ) : likedSeries.length === 0 ? (
+                        <Box margin={"30px 0"}>
+                            <Typography variant="h6" color="#fff">
+                                Você ainda não curtiu nenhum seriado :C
+                            </Typography>
+                        </Box>
                     ) : (
                         likedSeries.map((serie, index) => {
                             return (

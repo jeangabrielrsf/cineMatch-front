@@ -105,7 +105,7 @@ export default function Header() {
     return (
         <AppBar
             position="static"
-            sx={{ padding: "10px", backgroundColor: "#219EBC" }}
+            sx={{ padding: "10px", backgroundColor: "#FB8500" }}
         >
             <Toolbar
                 disableGutters
@@ -138,9 +138,9 @@ export default function Header() {
                                     marginRight: "5px",
                                     display: "block",
                                     color: "#fff",
-                                    backgroundColor: "#9381ff",
+                                    backgroundColor: "#023047",
                                     ":hover": {
-                                        backgroundColor: "#9381ff",
+                                        backgroundColor: "#023047",
                                         transform: "scale(1.05)",
                                     },
                                 }}

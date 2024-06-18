@@ -1,6 +1,6 @@
 import api from "@/services/tmdbApi";
-export async function getPopularMovies() {
-    const response = await api.get("movie/popular?language=pt-BR&page=1");
+export async function getPopularMovies(page: number = 1) {
+    const response = await api.get(`movie/popular?language=pt-BR&page=${page}`);
     return response.data;
 }
 

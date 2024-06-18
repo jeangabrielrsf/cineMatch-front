@@ -76,9 +76,9 @@ export default function HomePage() {
                     onClick={handleClickButton}
                     size="large"
                     sx={{
-                        backgroundColor: "#9381ff",
+                        backgroundColor: "#FB8500",
                         ":hover": {
-                            backgroundColor: "#9381ff",
+                            backgroundColor: "#FB8500",
                             transform: "scale(1.2)",
                         },
                     }}

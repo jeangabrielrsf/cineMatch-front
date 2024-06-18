@@ -54,7 +54,6 @@ export default function MovieContent(props: Readonly<{ movie: any }>) {
         const likedMovies = data.liked_movies;
         console.log(props.movie);
         for (let movie of likedMovies) {
-            console.log(movie.title == props.movie.title);
             if (movie.title == props.movie.title) setIsLiked(true);
         }
     }
