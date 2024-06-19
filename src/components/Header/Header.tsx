@@ -220,7 +220,7 @@ export default function Header() {
                         size="large"
                         aria-controls="menu-appbar"
                         aria-haspopup="true"
-                        onClick={() => handleMenu}
+                        onClick={handleMenu}
                         color="inherit"
                     >
                         <AccountCircle />
