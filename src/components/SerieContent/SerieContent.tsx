@@ -1,11 +1,8 @@
 import UserTokenContext from "@/contexts/authContext";
-import {
-    getUserLikedSeries,
-    likeAMovie,
-    likeASerie,
-} from "@/services/cinematch";
+import { getUserLikedSeries, likeASerie } from "@/services/cinematch";
 import { getSerieWatchProvider } from "@/services/seriesApi";
-import { MovieData, SerieData } from "@/utils/contentUtils";
+import { SerieData } from "@/utils/contentUtils";
+import { SerieContentProps, WatchProviders } from "@/utils/types";
 import { CalendarMonth, LocalMovies, StarRate } from "@mui/icons-material";
 import {
     Alert,
@@ -30,19 +27,17 @@ import dayjs from "dayjs";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 
-export default function SerieContent(
-    props: Readonly<{ serie: any; tmdb_id?: number }>
-) {
+export default function SerieContent({ serie, tmdb_id }: SerieContentProps) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
-    const [snackStatus, setSnackStatus] = useState("");
+    const [snackStatus, setSnackStatus] = useState<string>("");
     const [isLiked, setIsLiked] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [watchProviders, setWatchProviders] = useState<Object | undefined>(
-        []
-    );
+    const [watchProviders, setWatchProviders] = useState<
+        WatchProviders[] | undefined
+    >([]);
     const userToken = useContext(UserTokenContext).userToken;
-    const releaseDate = dayjs(props.serie.first_air_date).format("DD/MM/YYYY");
+    const releaseDate = dayjs(serie.first_air_date).format("DD/MM/YYYY");
 
     function handleOpenDialog() {
         handleSerieProviders();
@@ -66,8 +61,8 @@ export default function SerieContent(
     async function isSerieFavorited() {
         const data = await getUserLikedSeries(userToken);
         const likedSeries = data.liked_series;
-        for (let serie of likedSeries) {
-            if (serie.name == props.serie.name) setIsLiked(true);
+        for (const likedSerie of likedSeries) {
+            if (likedSerie.name == serie.name) setIsLiked(true);
         }
     }
 
@@ -77,17 +72,17 @@ export default function SerieContent(
             return;
         }
         const serieData: SerieData = {
-            name: props.serie.name,
-            overview: props.serie.overview,
-            tmdb_id: props.serie.id,
-            popularity: props.serie.popularity,
-            vote_average: props.serie.vote_average,
-            vote_count: props.serie.vote_count,
-            poster_path: props.serie.poster_path,
-            first_air_date: props.serie.first_air_date,
+            name: serie.name,
+            overview: serie.overview,
+            tmdb_id: serie.id,
+            popularity: serie.popularity,
+            vote_average: serie.vote_average,
+            vote_count: serie.vote_count,
+            poster_path: serie.poster_path,
+            first_air_date: serie.first_air_date,
         };
         try {
-            const response = await likeASerie(userToken, serieData);
+            await likeASerie(userToken, serieData);
             handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
@@ -99,12 +94,12 @@ export default function SerieContent(
         setLoading(true);
         let data;
         try {
-            if (props.tmdb_id) {
-                data = await getSerieWatchProvider(props.tmdb_id);
+            if (tmdb_id) {
+                data = await getSerieWatchProvider(tmdb_id);
             } else {
-                data = await getSerieWatchProvider(props.serie.id);
+                data = await getSerieWatchProvider(serie.id);
             }
-            let providers = data.results.BR?.flatrate;
+            const providers = data.results.BR?.flatrate;
             setWatchProviders(providers);
         } catch (error) {
             console.error(error);
@@ -119,14 +114,14 @@ export default function SerieContent(
                     <img
                         src={
                             import.meta.env.VITE_BASE_POSTER_URL +
-                            props.serie.poster_path
+                            serie.poster_path
                         }
-                        alt={props.serie.name}
+                        alt={serie.name}
                     />
                 </SeriePoster>
             </Box>
             <Dialog open={openInfo} onClick={handleCloseDialog}>
-                <DialogTitle>{props.serie.name}</DialogTitle>
+                <DialogTitle>{serie.name}</DialogTitle>
                 <Card
                     sx={{
                         maxWidth: "600px",
@@ -139,14 +134,14 @@ export default function SerieContent(
                         sx={{ objectFit: "contain", maxWidth: "100%" }}
                         image={
                             import.meta.env.VITE_BASE_POSTER_URL +
-                            props.serie.poster_path
+                            serie.poster_path
                         }
-                        alt={props.serie.name}
+                        alt={serie.name}
                     />
                     <CardContent>
                         <List>
                             <ListItem>
-                                <Typography>{props.serie.overview}</Typography>
+                                <Typography>{serie.overview}</Typography>
                             </ListItem>
                             <Divider />
                             <ListItem>
@@ -160,7 +155,7 @@ export default function SerieContent(
                                 <ListItemIcon>
                                     <StarRate />
                                 </ListItemIcon>
-                                Nota média: {props.serie.vote_average}
+                                Nota média: {serie.vote_average}
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>

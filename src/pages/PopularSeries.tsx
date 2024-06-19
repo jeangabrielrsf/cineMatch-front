@@ -1,4 +1,3 @@
-import PageSectionTitle from "@/components/PageSectionTitle/PageSectionTitle";
 import PopularSeriesContent from "@/components/PopularContent/PopularSeriesContent";
 import { Box, Typography } from "@mui/material";
 

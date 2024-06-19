@@ -13,7 +13,7 @@ import {
     Typography,
 } from "@mui/material";
 import {
-    ChangeEvent,
+    MouseEvent,
     useCallback,
     useContext,
     useEffect,
@@ -26,19 +26,41 @@ import SignupDialog from "../SignupDialog";
 import UserTokenContext from "@/contexts/authContext";
 import { searchAContent } from "@/services/moviesApi";
 
+interface ContentTMDB {
+    backdrop_path: string;
+    id: number;
+    original_title: string;
+    overview: string;
+    poster_path: string;
+    media_type: string;
+    adult: boolean;
+    title: string;
+    original_language: string;
+    genre_ids: number[];
+    popularity: number;
+    release_date: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
+}
+interface OptionsResult {
+    page?: number;
+    results: ContentTMDB[];
+}
+
 export default function Header() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { userToken, setUserToken } = useContext(UserTokenContext);
+    const userContext = useContext(UserTokenContext);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const [openRegisterDialog, setOpenRegisterDialog] = useState(false);
     const [openSearch, setOpenSearch] = useState(false);
     const [loadingSearch, setLoadingSearch] = useState(false);
-    const [searchText, setSearchText] = useState("");
-    const [options, setOptions] = useState([]);
+    const [searchText, setSearchText] = useState<string>("");
+    const [options, setOptions] = useState<OptionsResult>({ results: [] });
     const pages = ["filmes populares", "séries populares"];
     const navigate = useNavigate();
 
-    function handleMenu(event: ChangeEvent<HTMLElement>) {
+    function handleMenu(event: MouseEvent<HTMLElement>) {
         setAnchorEl(event.currentTarget);
     }
     function handleClose() {
@@ -59,21 +81,21 @@ export default function Header() {
     }
 
     function handleLogout() {
-        setUserToken("");
+        userContext?.setUserToken("");
         handleClose();
     }
 
-    const debounce = (func: Function, delay: number) => {
+    const debounce = (func: (query: string) => void, delay: number) => {
         let debounceTimer: NodeJS.Timeout;
-        return function (...args: any) {
+        return function (query: string) {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => func.apply(this, args), delay);
+            debounceTimer = setTimeout(() => func(query), delay);
         };
     };
 
     const fetchSearchResults = useCallback(async (query: string) => {
         if (query.length < 2) {
-            setOptions([]);
+            setOptions({ results: [] });
             setLoadingSearch(false);
             return;
         }
@@ -82,17 +104,17 @@ export default function Header() {
         try {
             const data = await searchAContent(query);
             console.log(data);
-            setOptions(data.results);
+            setOptions({ results: data.results });
         } catch (error) {
             console.error(error);
-            setOptions([]);
+            setOptions({ results: [] });
         }
         setLoadingSearch(false);
     }, []);
 
     const debouncedFetchSearchResults = useCallback(
-        debounce(fetchSearchResults, 300),
-        []
+        debounce((query: string) => fetchSearchResults(query), 300),
+        [fetchSearchResults]
     );
 
     useEffect(() => {
@@ -159,7 +181,7 @@ export default function Header() {
 
                 <Autocomplete
                     sx={{ width: "300px" }}
-                    options={options}
+                    options={options?.results}
                     open={openSearch}
                     loading={loadingSearch}
                     isOptionEqualToValue={(option, value) =>
@@ -167,6 +189,7 @@ export default function Header() {
                     }
                     getOptionLabel={(option) => option.title}
                     onInputChange={(event, value) => {
+                        console.log(event);
                         setSearchText(value);
                         setOpenSearch(true);
                     }}
@@ -197,7 +220,7 @@ export default function Header() {
                         size="large"
                         aria-controls="menu-appbar"
                         aria-haspopup="true"
-                        onClick={handleMenu}
+                        onClick={() => handleMenu}
                         color="inherit"
                     >
                         <AccountCircle />
@@ -217,7 +240,7 @@ export default function Header() {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        {userToken.length === 0
+                        {userContext?.userToken.length === 0
                             ? [
                                   <MenuItem
                                       onClick={handleOpenLoginDialog}
@@ -247,7 +270,7 @@ export default function Header() {
                     <LoginDialog
                         openDialog={openLoginDialog}
                         setOpenDialog={setOpenLoginDialog}
-                        setAuth={setUserToken}
+                        setAuth={userContext.setUserToken}
                         setAnchorEl={setAnchorEl}
                     />
                     <SignupDialog

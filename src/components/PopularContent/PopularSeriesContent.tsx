@@ -28,6 +28,7 @@ export default function PopularSeriesContent() {
     }, [fetchSeriesData]);
 
     function handlePage(event: ChangeEvent<unknown>, value: number) {
+        console.log(event);
         setPage(value);
     }
 

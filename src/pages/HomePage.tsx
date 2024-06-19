@@ -8,18 +8,16 @@ import {
     Stack,
     Step,
     StepButton,
-    StepContent,
-    StepLabel,
     Stepper,
     Typography,
 } from "@mui/material";
-import { ReactNode, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
     const navigate = useNavigate();
     const [activeStep, setActiveStep] = useState(0);
-    const [completed, setCompleted] = useState<{ [k: number]: boolean }>({});
+    const [completed] = useState<{ [k: number]: boolean }>({});
     const [openDialog, setOpenDialog] = useState(false);
     const { userToken, setUserToken } = useContext(UserTokenContext);
 

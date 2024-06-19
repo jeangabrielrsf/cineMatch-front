@@ -2,6 +2,7 @@ import UserTokenContext from "@/contexts/authContext";
 import { getUserLikedMovies, likeAMovie } from "@/services/cinematch";
 import { getMovieWatchProvider } from "@/services/moviesApi";
 import { MovieData } from "@/utils/contentUtils";
+import { MovieContentProps, WatchProviders } from "@/utils/types";
 import { CalendarMonth, LocalMovies, StarRate } from "@mui/icons-material";
 import {
     Alert,
@@ -26,18 +27,16 @@ import dayjs from "dayjs";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 
-export default function MovieContent(
-    props: Readonly<{ movie: any; tmdb_id?: number }>
-) {
+export default function MovieContent({ movie, tmdb_id }: MovieContentProps) {
     const [openInfo, setOpenInfo] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
-    const [snackStatus, setSnackStatus] = useState("");
+    const [snackStatus, setSnackStatus] = useState<string>("");
     const [isLiked, setIsLiked] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [watchProviders, setWatchProviders] = useState<Object | undefined>(
-        []
-    );
-    const releaseDate = dayjs(props.movie.release_date).format("DD/MM/YYYY");
+    const [watchProviders, setWatchProviders] = useState<
+        WatchProviders[] | undefined
+    >([]);
+    const releaseDate = dayjs(movie.release_date).format("DD/MM/YYYY");
     const userToken = useContext(UserTokenContext).userToken;
 
     function handleOpenDialog() {
@@ -62,9 +61,9 @@ export default function MovieContent(
     async function isMovieFavorited() {
         const data = await getUserLikedMovies(userToken);
         const likedMovies = data.liked_movies;
-        console.log(props.movie);
-        for (let movie of likedMovies) {
-            if (movie.title == props.movie.title) setIsLiked(true);
+        console.log(movie);
+        for (const likedMovie of likedMovies) {
+            if (likedMovie.title == movie.title) setIsLiked(true);
         }
     }
 
@@ -73,17 +72,17 @@ export default function MovieContent(
             return;
         }
         const movieData: MovieData = {
-            title: props.movie.title,
-            overview: props.movie.overview,
-            tmdb_id: props.movie.id,
-            popularity: props.movie.popularity,
-            vote_average: props.movie.vote_average,
-            vote_count: props.movie.vote_count,
-            poster_path: props.movie.poster_path,
-            release_date: props.movie.release_date,
+            title: movie.title,
+            overview: movie.overview,
+            tmdb_id: movie.id,
+            popularity: movie.popularity,
+            vote_average: movie.vote_average,
+            vote_count: movie.vote_count,
+            poster_path: movie.poster_path,
+            release_date: movie.release_date,
         };
         try {
-            const response = await likeAMovie(userToken, movieData);
+            await likeAMovie(userToken, movieData);
             handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
@@ -95,13 +94,13 @@ export default function MovieContent(
         setLoading(true);
         let data;
         try {
-            if (props.tmdb_id) {
-                data = await getMovieWatchProvider(props.tmdb_id);
+            if (tmdb_id) {
+                data = await getMovieWatchProvider(tmdb_id);
             } else {
-                data = await getMovieWatchProvider(props.movie.id);
+                data = await getMovieWatchProvider(movie.id);
             }
             console.log(data.results.BR?.flatrate);
-            let providers = data.results.BR?.flatrate;
+            const providers = data.results.BR?.flatrate;
             setWatchProviders(providers);
         } catch (error) {
             console.error(error);
@@ -116,14 +115,14 @@ export default function MovieContent(
                     <img
                         src={
                             import.meta.env.VITE_BASE_POSTER_URL +
-                            props.movie.poster_path
+                            movie.poster_path
                         }
-                        alt={props.movie.original_title}
+                        alt={movie.title}
                     />
                 </MoviePoster>
             </Box>
             <Dialog open={openInfo} onClick={handleCloseDialog}>
-                <DialogTitle>{props.movie.title}</DialogTitle>
+                <DialogTitle>{movie.title}</DialogTitle>
                 <Card
                     sx={{
                         maxWidth: "600px",
@@ -136,14 +135,14 @@ export default function MovieContent(
                         sx={{ objectFit: "contain", maxWidth: "100%" }}
                         image={
                             import.meta.env.VITE_BASE_POSTER_URL +
-                            props.movie.poster_path
+                            movie.poster_path
                         }
-                        alt={props.movie.title}
+                        alt={movie.title}
                     />
                     <CardContent>
                         <List>
                             <ListItem>
-                                <Typography>{props.movie.overview}</Typography>
+                                <Typography>{movie.overview}</Typography>
                             </ListItem>
                             <Divider />
                             <ListItem>
@@ -157,7 +156,7 @@ export default function MovieContent(
                                 <ListItemIcon>
                                     <StarRate />
                                 </ListItemIcon>
-                                Nota média: {props.movie.vote_average}
+                                Nota média: {movie.vote_average}
                             </ListItem>
                             <ListItem>
                                 <ListItemIcon>

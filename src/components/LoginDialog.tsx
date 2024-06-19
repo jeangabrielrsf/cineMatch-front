@@ -1,7 +1,7 @@
-import UserTokenContext from "@/contexts/authContext";
 import { login } from "@/services/auth";
 import { UserLoginData } from "@/utils/formUtils";
 import { LoginDialogProps } from "@/utils/loginDialogUtils";
+import { FormJsonData } from "@/utils/types";
 import {
     Alert,
     Backdrop,
@@ -15,7 +15,7 @@ import {
     Snackbar,
     TextField,
 } from "@mui/material";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useState } from "react";
 
 export default function LoginDialog({
     openDialog,
@@ -52,7 +52,9 @@ export default function LoginDialog({
         handleOpenLoading();
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const formJson = Object.fromEntries((formData as any).entries());
+        const formJson: FormJsonData = Object.fromEntries(
+            formData.entries()
+        ) as unknown as FormJsonData;
         const data: UserLoginData = {
             username: formJson.email,
             password: formJson.password,

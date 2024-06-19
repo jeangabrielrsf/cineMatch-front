@@ -1,4 +1,5 @@
 export interface MovieData {
+    id?: number;
     title: string;
     overview: string;
     tmdb_id: number;
@@ -10,6 +11,7 @@ export interface MovieData {
 }
 
 export interface SerieData {
+    id?: number;
     name: string;
     overview: string;
     tmdb_id: number;

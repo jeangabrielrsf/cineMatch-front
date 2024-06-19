@@ -1,6 +1,4 @@
-import MovieContent, {
-    MoviePoster,
-} from "@/components/MovieContent/MovieContent";
+import MovieContent from "@/components/MovieContent/MovieContent";
 import SerieContent from "@/components/SerieContent/SerieContent";
 import UserTokenContext from "@/contexts/authContext";
 import { getUserLikedMovies, getUserLikedSeries } from "@/services/cinematch";

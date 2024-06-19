@@ -1,5 +1,10 @@
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
-const MoviesContext = createContext<Object>([]);
+interface MovieContextType {
+    popularMovies: any[];
+    setPopularMovies: Dispatch<SetStateAction<[]>>;
+}
+
+const MoviesContext = createContext<MovieContextType | undefined>(undefined);
 
 export default MoviesContext;

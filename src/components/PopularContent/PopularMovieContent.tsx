@@ -15,19 +15,19 @@ import {
     Container,
     Grid,
     Pagination,
-    PaginationItem,
     Stack,
 } from "@mui/material";
+import { MovieData } from "@/utils/contentUtils";
 
 export default function PopularMovieContent() {
-    const { popularMovies, setPopularMovies } = useContext(MoviesContext);
+    const moviesContext = useContext(MoviesContext);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
 
     const fetchMoviesData = useCallback(async () => {
         setLoading(true);
         const data = await getPopularMovies(page);
-        setPopularMovies(data.results);
+        moviesContext.setPopularMovies(data.results);
         setLoading(false);
     }, [page]);
 
@@ -36,23 +36,28 @@ export default function PopularMovieContent() {
     }, [fetchMoviesData]);
 
     function handlePage(event: ChangeEvent<unknown>, value: number) {
+        console.log(event);
         setPage(value);
     }
     return (
         <Container>
             <Grid container columns={4}>
                 <MoviesContainer>
-                    {loading == true ? (
+                    {loading ? (
                         <Box display={"flex"} justifyContent={"center"}>
                             <CircularProgress
-                                size="large"
+                                size={40}
                                 sx={{ margin: "5px auto" }}
                             />
                         </Box>
                     ) : (
-                        popularMovies.map((movie: object, index) => {
-                            return <MovieContent key={index} movie={movie} />;
-                        })
+                        moviesContext.popularMovies.map(
+                            (movie: MovieData, index) => {
+                                return (
+                                    <MovieContent key={index} movie={movie} />
+                                );
+                            }
+                        )
                     )}
                 </MoviesContainer>
             </Grid>
@@ -60,9 +65,9 @@ export default function PopularMovieContent() {
                 <Pagination
                     onChange={handlePage}
                     variant="outlined"
+                    color="custom"
                     count={20}
                     size="large"
-                    color={"custom"}
                     sx={{
                         display: "flex",
                         justifyContent: "center",

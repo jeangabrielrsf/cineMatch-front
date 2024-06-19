@@ -1,5 +1,7 @@
 import { register } from "@/services/auth";
 import { UserRegisterData } from "@/utils/formUtils";
+import { SignupDialogProps } from "@/utils/registerDialogUtils";
+import { FormJsonData } from "@/utils/types";
 import {
     Alert,
     Backdrop,
@@ -19,10 +21,10 @@ export default function SignupDialog({
     openDialog,
     setOpenDialog,
     setAnchorEl,
-}) {
+}: SignupDialogProps) {
     const [loading, setLoading] = useState(false);
     const [openSnack, setOpenSnack] = useState(false);
-    const [snackStatus, setSnackStatus] = useState("");
+    const [snackStatus, setSnackStatus] = useState<string>("");
 
     function handleCloseDialog() {
         setOpenDialog(false);
@@ -49,14 +51,17 @@ export default function SignupDialog({
         handleOpenLoading();
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const formJson = Object.fromEntries((formData as any).entries());
+
+        const formJson: FormJsonData = Object.fromEntries(
+            formData.entries()
+        ) as unknown as FormJsonData;
         const data: UserRegisterData = {
             username: formJson.username,
             email: formJson.email,
             password: formJson.password,
         };
         try {
-            const response = await register(data);
+            await register(data);
             handleSnackBarOpen("success");
         } catch (error) {
             console.error(error);
